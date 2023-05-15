@@ -84,10 +84,58 @@ void setHomeBases() {
 }
 
 void setLandmines() {
-    for(int i = 0; i <= 16; i++) {
-        gameBoard[i][16].type = CellType.LANDMINE;
-        gameBoard[16][i].type = CellType.LANDMINE;
-    }
+    
+    // Minefield (7, 6), (7,7), (6,7)
+    gameBoard[7][6].type = CellType.LANDMINE;
+    gameBoard[7][7].type = CellType.LANDMINE;
+    gameBoard[6][7].type = CellType.LANDMINE;
+
+    // Minefield (21, 6), (22, 6), (23, 6), (21, 7), (22, 7)
+    gameBoard[21][6].type = CellType.LANDMINE;
+    gameBoard[22][6].type = CellType.LANDMINE;
+    gameBoard[23][6].type = CellType.LANDMINE;
+    gameBoard[21][7].type = CellType.LANDMINE;
+    gameBoard[22][7].type = CellType.LANDMINE;
+
+    // Minefield (7, 14), (8, 14), (8, 15), (9, 15)
+    gameBoard[7][14].type = CellType.LANDMINE;
+    gameBoard[8][14].type = CellType.LANDMINE;
+    gameBoard[8][15].type = CellType.LANDMINE;
+    gameBoard[9][15].type = CellType.LANDMINE;
+
+    // Minefield (1, 17), (2, 17), (3, 17), (1, 18), (2, 18), (3, 18)
+    gameBoard[1][17].type = CellType.LANDMINE;
+    gameBoard[2][17].type = CellType.LANDMINE;
+    gameBoard[3][17].type = CellType.LANDMINE;
+    gameBoard[1][18].type = CellType.LANDMINE;
+
+    // Minefield (13, 12), (13, 13), (14, 12), (14, 13)
+    gameBoard[13][12].type = CellType.LANDMINE;
+    gameBoard[13][13].type = CellType.LANDMINE;
+    gameBoard[14][12].type = CellType.LANDMINE;
+    gameBoard[14][13].type = CellType.LANDMINE;
+
+    // Minefield (17, 18), (17, 19), (18, 19), (17, 20), (18, 20), (19, 20)
+    gameBoard[17][8].type = CellType.LANDMINE;
+    gameBoard[17][9].type = CellType.LANDMINE;
+    gameBoard[18][9].type = CellType.LANDMINE;
+    gameBoard[17][10].type = CellType.LANDMINE;
+    gameBoard[18][10].type = CellType.LANDMINE;
+    gameBoard[19][10].type = CellType.LANDMINE;
+
+    // Minefield (19, 28), (19, 29), (19, 30), (19, 31), (18, 31)
+    gameBoard[19][28].type = CellType.LANDMINE;
+    gameBoard[19][29].type = CellType.LANDMINE;
+    gameBoard[19][30].type = CellType.LANDMINE;
+    gameBoard[19][31].type = CellType.LANDMINE;
+    gameBoard[18][31].type = CellType.LANDMINE;
+
+    // Minefield (11, 27), (11, 28), (10, 28), (10, 29)
+    gameBoard[11][27].type = CellType.LANDMINE;
+    gameBoard[11][28].type = CellType.LANDMINE;
+    gameBoard[10][28].type = CellType.LANDMINE;
+    gameBoard[10][29].type = CellType.LANDMINE;
+
 }
 
 void setTrees() {

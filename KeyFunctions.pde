@@ -54,3 +54,12 @@ void keyReleased() {
         }
     }
 }
+
+void mouseClicked() {
+    if(mouseX < 0 || mouseX > gridSize * cellSize || mouseY < 0 || mouseY > gridSize * cellSize) {
+        return;
+    }
+
+    currentlySelectedNode = gameBoard[mouseX / cellSize][mouseY / cellSize];
+}
+

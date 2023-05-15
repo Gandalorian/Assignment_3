@@ -8,10 +8,12 @@
     float[][] QTable;
 
     Tank tank;
+    int tankPreviousx;
+    int tankPreviousy;
 
-    int currentEpisode = 0;
+    int currentEpisode = 1;
     int episodes;
-    int currentIteration = 0;
+    int currentIteration = 1;
     int max_iterations;
     final int ACTIONSPACE = 4;
     float exploration_probability = 1;
@@ -54,8 +56,12 @@
         updateVisited();
         float reward = determineReward(newState[0], newState[1]);
 
-        updateQValue(tank.x, tank.y, action, reward, newState[0], newState[1]);
-
+        if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE) {
+            updateQValue(tankPreviousx, tankPreviousy, action, reward, newState[0], newState[1]);
+        } else {
+            updateQValue(tank.x, tank.y, action, reward, newState[0], newState[1]);
+        }
+        
         if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE || allNodesVisited()) {
             resetBoard();
             currentIteration++;
@@ -86,15 +92,23 @@
     int[] applyAction(int x, int y, int action) {
         switch(action) {
             case 0: // Up
+                tankPreviousx = tank.x;
+                tankPreviousy = tank.y;
                 tank.moveUp();
                 break;
             case 1: // Down
+                tankPreviousx = tank.x;
+                tankPreviousy = tank.y;
                 tank.moveDown();
                 break;
             case 2: // Left
+                tankPreviousx = tank.x;
+                tankPreviousy = tank.y;
                 tank.moveLeft();
                 break;
             case 3: // Right
+                tankPreviousx = tank.x;
+                tankPreviousy = tank.y;
                 tank.moveRight();
                 break;
         }

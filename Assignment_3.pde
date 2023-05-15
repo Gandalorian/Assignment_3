@@ -15,7 +15,6 @@ Node[][] gameBoard = new Node[gridSize][gridSize];
 
 int cellSize = 40;
 
-
 color treeColor = color(0, 128, 0);
 color natoColor = color(0, 0, 255, 120);
 color pactColor = color(255, 0, 0, 120);
@@ -41,7 +40,7 @@ Timer timer;
 QLearning qLearning;
 
 void setup() {
-    size(1280, 1280);
+    size(1680, 1280);
     frameRate(300);
     for(int i = 0; i < gridSize; i++) {
         for(int j = 0; j < gridSize; j++) {
@@ -96,6 +95,7 @@ void draw() {
     }
 
     qLearning.draw();
+    drawDebugging();
 }
 
 void drawGrid() {
