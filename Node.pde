@@ -11,7 +11,7 @@
 
 // Enum that represents the different types of nodes on the board.
 enum CellType {
-    TREE, NATO, PACT, TANK, SWAMP, EMPTY
+    TREE, NATO, PACT, TANK, SWAMP, EMPTY, LANDMINE
 }
 
 // The size of the cells on the board.
@@ -29,6 +29,7 @@ class Node {
     // Flags that represent if the node has been explored or visited.
     boolean explored = false;
     boolean visited = false;
+    int visitCount = 0;
 
     // Flag that represents if the node can be used as a path.
     boolean obstacle = false;

@@ -30,6 +30,38 @@ void resetGame(){
     setGameBoard();
 }
 
+void resetBoard() {
+    activeTank.x = activeTank.team.homebase[0] + 1;
+    activeTank.y = activeTank.team.homebase[1] + 1;
+
+    for(int i = 0; i < gridSize; i++) {
+        for(int j = 0; j < gridSize; j++) {
+            gameBoard[i][j].visited = false;
+            gameBoard[i][j].visitCount = 0;
+        }
+    }
+}
+
+void updateVisited() {
+    Node activeNode = gameBoard[activeTank.x][activeTank.y];
+
+    if(!activeNode.visited) {
+        activeNode.visited = true;
+    }
+    activeNode.visitCount++;
+}
+
+boolean allNodesVisited() {
+    for(int i = 0; i < gridSize; i++) {
+        for(int j = 0; j < gridSize; j++) {
+            if(!gameBoard[i][j].visited && !gameBoard[i][j].obstacle) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void setGameBoard() {
     setHomeBases();
     setTrees();

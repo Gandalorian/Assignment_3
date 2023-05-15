@@ -30,7 +30,11 @@ Tree[] trees = new Tree[14];
 
 Tank[] tanks = new Tank[6];
 
+Tank activeTank;
+
 Timer timer;
+
+QLearning qLearning;
 
 void setup() {
     size(800, 800);
@@ -52,9 +56,14 @@ void setup() {
     tanks[4] = blueTeam.tanks[1];
     tanks[5] = blueTeam.tanks[2];
 
+    activeTank = tanks[0];
+
     tanks[0].userControl = true;
 
     setGameBoard();
+
+    qLearning = new QLearning(1000, 100, 0.1, tanks[0]);
+     
 }
 
 void draw() {
@@ -80,6 +89,8 @@ void draw() {
         }
         tree.draw();
     }
+
+    qLearning.draw();
 }
 
 void drawGrid() {
