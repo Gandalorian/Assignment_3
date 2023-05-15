@@ -36,8 +36,8 @@ class Tank {
         this.team = team;
         this.id = id;
 
-        xCoord = x * 50;
-        yCoord = y * 50;
+        xCoord = x * 25;
+        yCoord = y * 25;
 
         if(this.team == redTeam) {
             rotation = 0;
@@ -55,7 +55,7 @@ class Tank {
     void moveRight() {
         if(!checkCollision(this.x + 1, this.y)) {
             this.x += 1;
-            this.xCoord = x * 50;
+            this.xCoord = x * 25;
             this.rotation = 0;
         }
     }
@@ -63,7 +63,7 @@ class Tank {
     void moveLeft() {
         if(!checkCollision(this.x - 1, this.y)) {
             this.x -= 1;
-            this.xCoord = x * 50;
+            this.xCoord = x * 25;
             this.rotation = 180;
         }
     }
@@ -71,7 +71,7 @@ class Tank {
     void moveUp() {
         if(!checkCollision(this.x, this.y - 1)) {
             this.y -= 1;
-            this.yCoord = y * 50;
+            this.yCoord = y * 25;
             this.rotation = 270;
         }
     }
@@ -79,7 +79,7 @@ class Tank {
     void moveDown() {
         if(!checkCollision(this.x, this.y + 1)) {
             this.y += 1;
-            this.yCoord = y * 50;
+            this.yCoord = y * 25;
             this.rotation = 90;
         }
     }
@@ -117,12 +117,12 @@ class Tank {
             fill(0, 0, 255);
         }
 
-        ellipse(xCoord+25, yCoord+25, 50, 50);
+        ellipse(xCoord+25/2, yCoord+25/2, 25, 25);
         strokeWeight(3);
-        line(xCoord + 25, yCoord + 25, xCoord + 25 + cos(radians(this.rotation)) * 25, yCoord + 25 + sin(radians(this.rotation)) * 25);
+        line(xCoord + 25/2, yCoord + 25/2, xCoord + 25/2 + cos(radians(this.rotation)) * 25/2, yCoord + 25/2 + sin(radians(this.rotation)) * 25/2);
         textSize(25);
         fill(255);
-        text(this.id, xCoord+25, yCoord+25);
+        text(this.id, xCoord+25/2, yCoord+25/2);
     }
     
 }

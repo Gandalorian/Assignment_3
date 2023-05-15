@@ -15,7 +15,7 @@ enum CellType {
 }
 
 // The size of the cells on the board.
-final int cellSize = 50;
+final int cellSize = 25;
 
 class Node {
 
@@ -77,8 +77,8 @@ class Node {
             fill(0, 0, 0, 120);
             ellipse(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, cellSize / 2, cellSize / 2);
         }
-        textSize(12);
+        textSize(8);
         fill(0);
-        text(x + "," + y, x * cellSize, y * cellSize + 12);
+        text(x + "," + y, x * cellSize, y * cellSize + 8);
     }
 }

@@ -10,8 +10,8 @@
  * every frame.
  */
 
-int gridSize = 16;
-Node gameBoard[][] = new Node[gridSize][gridSize];
+int gridSize = 32;
+Node[][] gameBoard = new Node[gridSize][gridSize];
 
 color treeColor = color(0, 128, 0);
 color natoColor = color(0, 0, 255, 120);
@@ -23,7 +23,7 @@ Team redTeam;
 Team blueTeam;
 
 int[] redHomebase = {0,0,2,5};
-int[] blueHomebase = {13,9,15,15};
+int[] blueHomebase = {29,25,31,31};
 
 Tree tree1;
 Tree tree2;
@@ -55,14 +55,6 @@ void setup() {
     tanks[4] = blueTeam.tanks[1];
     tanks[5] = blueTeam.tanks[2];
 
-    tree1 = new Tree(5, 12);
-    tree2 = new Tree(6, 5);
-    tree3 = new Tree(11, 10);
-
-    trees[0] = tree1;
-    trees[1] = tree2;
-    trees[2] = tree3;
-
     setGameBoard();
 }
 
@@ -83,9 +75,12 @@ void draw() {
         tank.draw();
     }
 
-    tree1.draw();
-    tree2.draw();
-    tree3.draw();
+    for(Tree tree : trees){
+        if(tree == null){
+            continue;
+        }
+        tree.draw();
+    }
 }
 
 void drawGrid() {

@@ -21,15 +21,15 @@ class Tree {
         this.x = x;
         this.y = y;
 
-        xCoord = x * 50;
-        yCoord = y * 50;
+        xCoord = x * 25;
+        yCoord = y * 25;
     }
 
     // Draws the tree on the screen
     void draw() {
         fill(treeColor, 50);
-        ellipse(xCoord, yCoord, 165, 165);
+        ellipse(xCoord, yCoord, 110, 110);
         fill(color(139, 69, 19));
-        ellipse(xCoord, yCoord, 165/2, 165/2);
+        ellipse(xCoord, yCoord, 50, 50);
     }
 }
