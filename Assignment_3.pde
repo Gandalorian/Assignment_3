@@ -52,6 +52,8 @@ void setup() {
     tanks[4] = blueTeam.tanks[1];
     tanks[5] = blueTeam.tanks[2];
 
+    tanks[0].userControl = true;
+
     setGameBoard();
 }
 
