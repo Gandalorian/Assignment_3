@@ -16,6 +16,7 @@ Node[][] gameBoard = new Node[gridSize][gridSize];
 color treeColor = color(0, 128, 0);
 color natoColor = color(0, 0, 255, 120);
 color pactColor = color(255, 0, 0, 120);
+color swampColor = color(139, 69, 19);
 color exploredColor = color(128, 128, 128);
 color emptyColor = color(0,0,0);
 

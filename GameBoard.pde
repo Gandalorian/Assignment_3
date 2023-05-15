@@ -40,6 +40,7 @@ void resetGame(){
 
 void setGameBoard() {
     setHomeBases();
+    setSwamps(int(random(128,192)));
     setTrees(int(random(5, 15)));
 }
 
@@ -80,23 +81,30 @@ void setTrees() {
 void setTrees(int number){
     trees = new Tree[number];
     for(int i = 0; i < number; i++){
-        int x = int(random(0, 31));
-        int y = int(random(0, 31));
+        int x = int(random(1, 31));
+        int y = int(random(1, 31));
 
         if(gameBoard[x][y].type == CellType.EMPTY
-        && gameBoard[x+1][y].type == CellType.EMPTY
-        && gameBoard[x][y+1].type == CellType.EMPTY
-        && gameBoard[x+1][y+1].type == CellType.EMPTY){
+        && gameBoard[x-1][y].type == CellType.EMPTY
+        && gameBoard[x][y-1].type == CellType.EMPTY
+        && gameBoard[x-1][y-1].type == CellType.EMPTY){
             gameBoard[x][y].type = CellType.TREE;
-            gameBoard[x+1][y].type = CellType.TREE;
-            gameBoard[x][y+1].type = CellType.TREE;
-            gameBoard[x+1][y+1].type = CellType.TREE;
+            gameBoard[x-1][y].type = CellType.TREE;
+            gameBoard[x][y-1].type = CellType.TREE;
+            gameBoard[x-1][y-1].type = CellType.TREE;
             trees[i] = new Tree(x, y);
         }
     }
 
 }
 
-void setSwamp(int number){
-    
+void setSwamps(int number){
+    for(int i = 0; i < number; i++){
+        int x = int(random(0, 31));
+        int y = int(random(0, 31));
+        if(gameBoard[x][y].type == CellType.EMPTY){
+            gameBoard[x][y].type = CellType.SWAMP;
+            gameBoard[x][y].value = 2;
+        }
+    }
 }

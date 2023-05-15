@@ -11,7 +11,7 @@
 
 // Enum that represents the different types of nodes on the board.
 enum CellType {
-    TREE, NATO, PACT, TANK, EMPTY
+    TREE, NATO, PACT, TANK, SWAMP, EMPTY
 }
 
 // The size of the cells on the board.
@@ -41,6 +41,9 @@ class Node {
         this.type = type;
         this.x = x;
         this.y = y;
+        if(this.type == CellType.SWAMP){
+            this.value = 2;
+        }
     }
 
     // Constructor
@@ -60,6 +63,8 @@ class Node {
             fill(natoColor, 80);
         } else if (type == CellType.PACT) {
             fill(pactColor, 90);
+        } else if (type == CellType.SWAMP) {
+                fill(swampColor, 50);
         } else if (type == CellType.EMPTY) {
                 fill(exploredColor, 50);
         } else {
