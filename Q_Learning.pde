@@ -15,7 +15,7 @@
     int max_iterations;
     final int ACTIONSPACE = 4;
     float exploration_probability = 1;
-    float exploration_decay = 0.001;
+    float exploration_decay = 0.05;
     float min_exploration = 0.01;
     float discounted_factor = 0.99;
     float learning_rate;
@@ -38,7 +38,12 @@
         if(currentIteration > max_iterations) {
             resetBoard();
             currentEpisode++;
-            exploration_probability = min_exploration + pow(1 - min_exploration, -exploration_decay * currentEpisode);
+            if(currentEpisode > episodes) {
+                System.out.println("Done training!");
+                noLoop();
+                return;
+            }
+            exploration_probability = max(min_exploration, 1 - (exploration_decay * currentEpisode) * (exploration_decay * currentEpisode));
             currentIteration = 0;
             System.out.println("New Episode: " + currentEpisode + " Exploration: " + exploration_probability);
         }
@@ -46,6 +51,7 @@
         int action = chooseAction(tank.x, tank.y);
 
         int[] newState = applyAction(tank.x, tank.y, action);
+        updateVisited();
         float reward = determineReward(newState[0], newState[1]);
 
         updateQValue(tank.x, tank.y, action, reward, newState[0], newState[1]);
@@ -54,11 +60,6 @@
             resetBoard();
             currentIteration++;
             System.out.println("New Iteration: " + currentIteration + " Exploration: " + exploration_probability);
-
-            if(currentEpisode > episodes) {
-                System.out.println("Done training!");
-                noLoop();
-            } 
         }
     }
 
@@ -106,20 +107,20 @@
         switch(gameBoard[x][y].type) {
             case EMPTY: // Regular node
                 if(gameBoard[x][y].visitCount > 1) {
-                    reward = 0.0f;
+                    reward = -5f;
                 } else {
-                    reward = 1.0f;
+                    reward = 5.0f;
                 }
                 break;
             case SWAMP: // Swamp
                 if(gameBoard[x][y].visited) {
-                    reward = -0.5f;
+                    reward = -10f;
                 } else {
-                    reward = 0.5f;
+                    reward = 5f;
                 }
                 break;
             case LANDMINE: // Landmine
-                reward = -10f;
+                reward = -1000f;
                 break;
         }
         return reward;

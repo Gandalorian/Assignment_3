@@ -42,6 +42,7 @@ QLearning qLearning;
 
 void setup() {
     size(1280, 1280);
+    frameRate(300);
     for(int i = 0; i < gridSize; i++) {
         for(int j = 0; j < gridSize; j++) {
             gameBoard[i][j] = new Node(CellType.EMPTY, i, j);
@@ -66,7 +67,7 @@ void setup() {
 
     setGameBoard();
 
-    qLearning = new QLearning(1000, 100, 0.1, tanks[0]);
+    qLearning = new QLearning(100, 10, 0.1, tanks[0]);
      
 }
 
