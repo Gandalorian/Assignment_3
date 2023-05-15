@@ -15,7 +15,9 @@
     int episodes;
     int currentIteration = 1;
     int max_iterations;
+    
     final int ACTIONSPACE = 4;
+
     float exploration_probability = 1;
     float exploration_decay = 0.05;
     float min_exploration = 0.01;
@@ -61,7 +63,7 @@
         } else {
             updateQValue(tank.x, tank.y, action, reward, newState[0], newState[1]);
         }
-        
+
         if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE || allNodesVisited()) {
             resetBoard();
             currentIteration++;
