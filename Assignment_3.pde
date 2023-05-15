@@ -26,11 +26,7 @@ Team blueTeam;
 int[] redHomebase = {0,0,2,5};
 int[] blueHomebase = {29,25,31,31};
 
-Tree tree1;
-Tree tree2;
-Tree tree3;
-
-Tree[] trees = new Tree[3];
+Tree[] trees = new Tree[14];
 
 Tank[] tanks = new Tank[6];
 
