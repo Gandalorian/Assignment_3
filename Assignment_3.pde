@@ -13,12 +13,16 @@
 int gridSize = 32;
 Node[][] gameBoard = new Node[gridSize][gridSize];
 
+int cellSize = 40;
+
+
 color treeColor = color(0, 128, 0);
 color natoColor = color(0, 0, 255, 120);
 color pactColor = color(255, 0, 0, 120);
 color swampColor = color(139, 69, 19);
 color exploredColor = color(128, 128, 128);
 color emptyColor = color(0,0,0);
+color landmineColor = color(255, 255, 0);
 
 Team redTeam;
 Team blueTeam;
@@ -37,7 +41,7 @@ Timer timer;
 QLearning qLearning;
 
 void setup() {
-    size(800, 800);
+    size(1280, 1280);
     for(int i = 0; i < gridSize; i++) {
         for(int j = 0; j < gridSize; j++) {
             gameBoard[i][j] = new Node(CellType.EMPTY, i, j);

@@ -66,6 +66,7 @@ void setGameBoard() {
     setHomeBases();
     setTrees();
     setSwamps();
+    setLandmines();
 }
 
 void setHomeBases() {
@@ -79,6 +80,13 @@ void setHomeBases() {
         for(int j = 31; j > 24; j--) {
             gameBoard[i][j].type = CellType.NATO;
         }
+    }
+}
+
+void setLandmines() {
+    for(int i = 0; i <= 16; i++) {
+        gameBoard[i][16].type = CellType.LANDMINE;
+        gameBoard[16][i].type = CellType.LANDMINE;
     }
 }
 

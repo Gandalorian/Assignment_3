@@ -35,6 +35,14 @@
     }
 
     void draw() {
+        if(currentIteration > max_iterations) {
+            resetBoard();
+            currentEpisode++;
+            exploration_probability = min_exploration + pow(1 - min_exploration, -exploration_decay * currentEpisode);
+            currentIteration = 0;
+            System.out.println("New Episode: " + currentEpisode + " Exploration: " + exploration_probability);
+        }
+
         int action = chooseAction(tank.x, tank.y);
 
         int[] newState = applyAction(tank.x, tank.y, action);
@@ -44,7 +52,8 @@
 
         if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE || allNodesVisited()) {
             resetBoard();
-            currentEpisode++;
+            currentIteration++;
+            System.out.println("New Iteration: " + currentIteration + " Exploration: " + exploration_probability);
 
             if(currentEpisode > episodes) {
                 System.out.println("Done training!");
@@ -118,6 +127,7 @@
 
     void updateQValue(int x, int y, int action, float reward, int newX, int newY) {
         QTable[x * gridSize + y][action] = QTable[x * gridSize + y][action] + learning_rate * (reward + discounted_factor * maxArr(QTable[newX * gridSize + newY]) - QTable[x * gridSize + y][action]);
+        updateNodeValues();
     }
 
     float maxArr(float[] arr) {
@@ -128,6 +138,17 @@
             }
         }
         return max;
+    }
+
+    void updateNodeValues() {
+        for(int i = 0; i < QTable.length; i++) {
+            int x = i / gridSize;
+            int y = i % gridSize;
+
+            for(int j = 0; j < 4; j++) {
+                gameBoard[x][y].weights[j] = QTable[i][j];
+            }
+        }
     }
 
  }

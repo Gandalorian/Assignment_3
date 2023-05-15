@@ -14,9 +14,6 @@ enum CellType {
     TREE, NATO, PACT, TANK, SWAMP, EMPTY, LANDMINE
 }
 
-// The size of the cells on the board.
-final int cellSize = 25;
-
 class Node {
 
     // Enum that represents the different types of nodes on the board.
@@ -36,6 +33,9 @@ class Node {
 
     // The weight of entering the node.
     int value = 1;
+
+    // Weights for leaving the node
+    float[] weights = new float[4];
 
     // Constructor
     Node(CellType type, int x, int y) {
@@ -65,9 +65,11 @@ class Node {
         } else if (type == CellType.PACT) {
             fill(pactColor, 90);
         } else if (type == CellType.SWAMP) {
-                fill(swampColor, 50);
+            fill(swampColor, 50);
         } else if (type == CellType.EMPTY) {
-                fill(exploredColor, 50);
+            fill(exploredColor, 50);
+        } else if (type == CellType.LANDMINE) {
+            fill(landmineColor, 50);
         } else {
             fill(emptyColor, 50);
         }
@@ -85,6 +87,10 @@ class Node {
         }
         textSize(8);
         fill(0);
-        text(x + "," + y, x * cellSize, y * cellSize + 8);
+        //text(x + "," + y, x * cellSize, y * cellSize + 8);
+        text(weights[0], x * cellSize + 10, y * cellSize + 10); // Up
+        text(weights[3], x * cellSize + 20, y * cellSize + 20); // Right
+        text(weights[1], x * cellSize + 10, y * cellSize + 40); // Down
+        text(weights[2], x * cellSize + 2, y * cellSize + 20); // Left
     }
 }
