@@ -45,8 +45,8 @@ void setup() {
 
     timer = new Timer();
 
-    redTeam = new RedTeam(pactColor, redHomebase);
-    blueTeam = new BlueTeam(natoColor, blueHomebase);
+    redTeam = new Team(pactColor, redHomebase);
+    blueTeam = new Team(natoColor, blueHomebase);
 
     tanks[0] = redTeam.tanks[0];
     tanks[1] = redTeam.tanks[1];
@@ -86,8 +86,6 @@ void draw() {
     tree1.draw();
     tree2.draw();
     tree3.draw();
-
-    blueTeam.teamLogic.knownWorld.draw();
 }
 
 void drawGrid() {

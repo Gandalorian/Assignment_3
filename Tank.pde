@@ -24,9 +24,6 @@ class Tank {
     Team team;
     int id;
 
-    // Instance of the logic class which is used for the AI
-    TankLogic logic;
-
     // Boolean for if the tank is controlled by the user or AI
     boolean userControl;
 
@@ -47,14 +44,11 @@ class Tank {
         } else {
             rotation = 180;
         }
-
-        this.logic = new TankLogic(this);
     }
 
     // Run every frame to update the tank's state
     void update() {
-        logic.knownWorld.nodes[x][y].visited = true;
-        this.logic.update();
+
     }
 
     // Move the tank in a given direction
@@ -63,7 +57,6 @@ class Tank {
             this.x += 1;
             this.xCoord = x * 50;
             this.rotation = 0;
-            logic.addFrontierNodes(this.x, this.y);
         }
     }
 
@@ -72,7 +65,6 @@ class Tank {
             this.x -= 1;
             this.xCoord = x * 50;
             this.rotation = 180;
-            logic.addFrontierNodes(this.x, this.y);
         }
     }
 
@@ -81,7 +73,6 @@ class Tank {
             this.y -= 1;
             this.yCoord = y * 50;
             this.rotation = 270;
-            logic.addFrontierNodes(this.x, this.y);
         }
     }
 
@@ -90,7 +81,6 @@ class Tank {
             this.y += 1;
             this.yCoord = y * 50;
             this.rotation = 90;
-            logic.addFrontierNodes(this.x, this.y);
         }
     }
 
@@ -102,8 +92,6 @@ class Tank {
 
         Node targetNode = gameBoard[targetX][targetY];
         if(targetNode.type == CellType.TREE) {
-            logic.knownWorld.nodes[targetX][targetY].type = CellType.TREE;
-            logic.knownWorld.nodes[targetX][targetY].obstacle = true;
             return true;
         }
 
@@ -112,8 +100,6 @@ class Tank {
                 continue;
             }
             if(tank.x == targetX && tank.y == targetY) {
-                logic.knownWorld.nodes[targetX][targetY].type = CellType.TANK;
-                logic.knownWorld.nodes[targetX][targetY].obstacle = true;
                 return true;
             }
         }
