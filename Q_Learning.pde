@@ -6,6 +6,8 @@
 
  class QLearning{
     float[][] QTable;
+    int[][] ReturnsCount;
+    ArrayList<Object[]> episode;
 
     Tank tank;
     int tankPreviousx;
@@ -26,6 +28,9 @@
 
     QLearning(int _episodes, int _maxIter, float _learningRate, Tank _tank){
         QTable = new float[gridSize * gridSize][4];
+        ReturnsCount = new int[gridSize * gridSize][4];
+        episode = new ArrayList<Object[]>();
+
         for(int i = 0; i < gridSize * gridSize; i++){
             for(int j = 0; j < 4; j++){
                 QTable[i][j] = 0.0;
@@ -57,6 +62,7 @@
         int[] newState = applyAction(tank.x, tank.y, action);
         updateVisited();
         float reward = determineReward(newState[0], newState[1]);
+        episode.add(new Object[]{tank.x * gridSize + tank.y, action, reward});
 
         if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE) {
             updateQValue(tankPreviousx, tankPreviousy, action, reward, newState[0], newState[1]);
@@ -123,27 +129,39 @@
         switch(gameBoard[x][y].type) {
             case EMPTY: // Regular node
                 if(gameBoard[x][y].visitCount > 1) {
-                    reward = -5f;
+                    reward = -1f;
                 } else {
-                    reward = 5.0f;
+                    reward = 1f;
                 }
                 break;
             case SWAMP: // Swamp
                 if(gameBoard[x][y].visited) {
-                    reward = -10f;
+                    reward = -2f;
                 } else {
-                    reward = 5f;
+                    reward = 0.5f;
                 }
                 break;
             case LANDMINE: // Landmine
-                reward = -1000f;
+                reward = -100f;
                 break;
         }
         return reward;
     }
 
     void updateQValue(int x, int y, int action, float reward, int newX, int newY) {
-        QTable[x * gridSize + y][action] = QTable[x * gridSize + y][action] + learning_rate * (reward + discounted_factor * maxArr(QTable[newX * gridSize + newY]) - QTable[x * gridSize + y][action]);
+        float returnFromState = 0;
+        for (int i = episode.size() - 1; i >= 0; i--) {
+            Object[] step = episode.get(i);
+            int state = (int) step[0];
+            int currentAction = (int) step[1];
+            float currentReward = (float) step[2];
+
+            returnFromState += currentReward;
+            ReturnsCount[state][currentAction] += 1;
+            float averageReturn = QTable[state][currentAction] + (returnFromState - QTable[state][currentAction]) / ReturnsCount[state][currentAction];
+            QTable[state][currentAction] = averageReturn;
+        }
+        episode.clear();
         updateNodeValues();
     }
 
