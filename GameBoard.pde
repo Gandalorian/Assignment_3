@@ -76,6 +76,21 @@ boolean allNodesVisited() {
     return true;
 }
 
+void checkVisitedTowers(){
+    int w = 0;
+    for(int i = 0; i < watchtowers.length; i+= 2){
+        if(!gameBoard[watchtowers[i]][watchtowers[i+1]].visited){
+            continue;
+        }
+        w++;
+        wtVisited = w;
+    }
+    if(w == 3){
+        println("All towers visited!");
+        qLearning.winsAchieved++;
+    }
+}
+
 boolean allWatchtowersVisited(){
     int w = 0;
     for(int i = 0; i < watchtowers.length; i+= 2){

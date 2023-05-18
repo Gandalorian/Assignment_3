@@ -23,7 +23,7 @@
     final int ACTIONSPACE = 4;
 
     float exploration_probability = 1;
-    float exploration_decay = 0.05;
+    float exploration_decay = 0.025;
     float min_exploration = 0.01;
     float discounted_factor = 0.99;
     float learning_rate;
@@ -61,11 +61,14 @@
         int[] newState = applyAction(tank.x, tank.y, action);
         actionsTaken++;
         nodesVisited = updateVisited();
+        checkVisitedTowers();
         float reward = determineReward(newState[0], newState[1]);
 
         updateQValue(tankPreviousx, tankPreviousy, action, reward, newState[0], newState[1]);
 
-        if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE || allWatchtowersVisited()) {
+        if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE 
+        || wtVisited == 3
+        || actionsTaken > 1000) {
             println("Iteration over.");
             println("Actions taken: " + actionsTaken);
             println("Watchtowers visited: " + wtVisited);
@@ -129,27 +132,26 @@
 
         switch(gameBoard[x][y].type) {
             case EMPTY: // Regular node
-                if(gameBoard[x][y].visitCount > 1) {
-                    reward = -float(gameBoard[x][y].visitCount);
-                } else {
-                    reward = 5.0f;
-                }
+                reward = 1.0f;
                 break;
             case SWAMP: // Swamp
-                if(gameBoard[x][y].visitCount > 1) {
-                    reward = -float(gameBoard[x][y].visitCount) * 1.5;
-                } else {
-                    reward = 5f;
-                }
+                reward = 0.5f;
+                //reward = -1f;
                 break;
             case LANDMINE: // Landmine
-                reward = -1000f;
+                reward = -10f;
                 break;
             case WATCHTOWER: // Watchtower
-                if(gameBoard[x][y].visitCount > 1) {
-                    reward = -100f;
-                } else {
+                /*
+                if(gameBoard[x][y].visitCount == 1) {
                     reward = 1000f * pow(10, wtVisited);
+                } else {
+                    reward = 1.0f;
+                }*/
+                if(wtVisited == 3){
+                    reward = 1000f;
+                }else{
+                    reward = 5f;
                 }
                 break;
         }
