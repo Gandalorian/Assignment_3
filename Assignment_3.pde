@@ -10,7 +10,7 @@
  * every frame.
  */
 
-int gridSize = 32;
+int gridSize = 16;
 Node[][] gameBoard = new Node[gridSize][gridSize];
 
 int cellSize = 40;
@@ -22,14 +22,20 @@ color swampColor = color(139, 69, 19);
 color exploredColor = color(128, 128, 128);
 color emptyColor = color(0,0,0);
 color landmineColor = color(255, 255, 0);
+color watchtowerColor = color(0, 249, 159);
 
 Team redTeam;
 Team blueTeam;
 
-int[] redHomebase = {0,0,2,5};
-int[] blueHomebase = {29,25,31,31};
+int[] redHomebase16 = {0,0,2,5};
+int[] redHomebase32 = {0,0,2,5};
+int[] blueHomebase32 = {29,25,31,31};
+int[] blueHomebase16 = {13,9,15,15};
 
-Tree[] trees = new Tree[14];
+int[] watchtowers = {4,7,14,5,7,11};
+int wtVisited;
+
+Tree[] trees;
 
 Tank[] tanks = new Tank[6];
 
@@ -40,8 +46,8 @@ Timer timer;
 QLearning qLearning;
 
 void setup() {
-    size(1680, 1280);
-    frameRate(300);
+    size(960, 640);
+    frameRate(120);
     for(int i = 0; i < gridSize; i++) {
         for(int j = 0; j < gridSize; j++) {
             gameBoard[i][j] = new Node(CellType.EMPTY, i, j);
@@ -50,8 +56,8 @@ void setup() {
 
     timer = new Timer();
 
-    redTeam = new Team(pactColor, redHomebase);
-    blueTeam = new Team(natoColor, blueHomebase);
+    redTeam = new Team(pactColor, redHomebase16);
+    blueTeam = new Team(natoColor, blueHomebase16);
 
     tanks[0] = redTeam.tanks[0];
     tanks[1] = redTeam.tanks[1];
@@ -64,9 +70,11 @@ void setup() {
 
     tanks[0].userControl = true;
 
-    setGameBoard();
+    wtVisited = 0;
 
-    qLearning = new QLearning(100, 10, 0.1, tanks[0]);
+    setGameBoard16();
+
+    qLearning = new QLearning(1000, 100, 0.1, tanks[0]);
      
 }
 

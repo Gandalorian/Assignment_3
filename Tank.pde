@@ -86,7 +86,7 @@ class Tank {
 
     // Check if a given move will collide with a tree or another tank
     boolean checkCollision(int targetX, int targetY) {
-        if(targetX < 0 || targetX > 31 || targetY < 0 || targetY > 31) {
+        if(targetX < 0 || targetX > gridSize - 1 || targetY < 0 || targetY > gridSize - 1) {
             return true;
         }
 

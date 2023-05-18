@@ -15,6 +15,10 @@
     int episodes;
     int currentIteration = 1;
     int max_iterations;
+
+    int actionsTaken = 0;
+    int nodesVisited = 0;
+    int winsAchieved = 0;
     
     final int ACTIONSPACE = 4;
 
@@ -55,19 +59,22 @@
         int action = chooseAction(tank.x, tank.y);
 
         int[] newState = applyAction(tank.x, tank.y, action);
-        updateVisited();
+        actionsTaken++;
+        nodesVisited = updateVisited();
         float reward = determineReward(newState[0], newState[1]);
 
-        if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE) {
-            updateQValue(tankPreviousx, tankPreviousy, action, reward, newState[0], newState[1]);
-        } else {
-            updateQValue(tank.x, tank.y, action, reward, newState[0], newState[1]);
-        }
+        updateQValue(tankPreviousx, tankPreviousy, action, reward, newState[0], newState[1]);
 
-        if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE || allNodesVisited()) {
+        if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE || allWatchtowersVisited()) {
+            println("Iteration over.");
+            println("Actions taken: " + actionsTaken);
+            println("Watchtowers visited: " + wtVisited);
             resetBoard();
+            actionsTaken = 0;
             currentIteration++;
-            System.out.println("New Iteration: " + currentIteration + " Exploration: " + exploration_probability);
+            println(" * * * * * ");
+            println("New Iteration: " + currentIteration);
+            println("Exploration probability: " + exploration_probability);
         }
     }
 
@@ -123,14 +130,14 @@
         switch(gameBoard[x][y].type) {
             case EMPTY: // Regular node
                 if(gameBoard[x][y].visitCount > 1) {
-                    reward = -5f;
+                    reward = -float(gameBoard[x][y].visitCount);
                 } else {
                     reward = 5.0f;
                 }
                 break;
             case SWAMP: // Swamp
-                if(gameBoard[x][y].visited) {
-                    reward = -10f;
+                if(gameBoard[x][y].visitCount > 1) {
+                    reward = -float(gameBoard[x][y].visitCount) * 1.5;
                 } else {
                     reward = 5f;
                 }
@@ -138,7 +145,17 @@
             case LANDMINE: // Landmine
                 reward = -1000f;
                 break;
+            case WATCHTOWER: // Watchtower
+                if(gameBoard[x][y].visitCount > 1) {
+                    reward = -100f;
+                } else {
+                    reward = 1000f * pow(10, wtVisited);
+                }
+                break;
         }
+
+        reward = reward * nodesVisited / actionsTaken;
+
         return reward;
     }
 
