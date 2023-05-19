@@ -112,9 +112,9 @@ class Tank {
         stroke(0);
         strokeWeight(2);
         if (team == redTeam) {
-            fill(255, 0, 0);
+            fill(255, 0, 0, 30);
         } else {
-            fill(0, 0, 255);
+            fill(0, 0, 255, 30);
         }
 
         ellipse(xCoord+cellSize/2, yCoord+cellSize/2, cellSize, cellSize);

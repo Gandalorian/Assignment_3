@@ -42,12 +42,14 @@ Tank[] tanks = new Tank[6];
 Tank activeTank;
 
 Timer timer;
+int timeBetweenMoves = 0;
+boolean done;
 
 QLearning qLearning;
 
 void setup() {
     size(960, 640);
-    frameRate(120);
+    frameRate(300);
     for(int i = 0; i < gridSize; i++) {
         for(int j = 0; j < gridSize; j++) {
             gameBoard[i][j] = new Node(CellType.EMPTY, i, j);
@@ -71,6 +73,7 @@ void setup() {
     tanks[0].userControl = true;
 
     wtVisited = 0;
+    done = false;
 
     setGameBoard16();
 
@@ -92,7 +95,7 @@ void draw() {
         if(tank == null){
             continue;
         }
-        tank.draw();
+        //tank.draw();
     }
 
     for(Tree tree : trees){
@@ -102,8 +105,16 @@ void draw() {
         tree.draw();
     }
 
-    qLearning.draw();
+    if(qLearning.currentEpisode < qLearning.episodes){
+        qLearning.calculateNextEpisode();
+    }else{
+        if(!done){
+            println("1000 episodes calculated. Time taken: " + nf(float(timer.getElapsedTime()) / 1000, 3, 3) + " seconds");
+            done = true;
+        }
+    }
     drawDebugging();
+    qLearning.simulateCurrentEpisode();
 }
 
 void drawGrid() {

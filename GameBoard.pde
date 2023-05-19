@@ -31,8 +31,8 @@ void resetGame16(){
 }
 
 void resetBoard() {
-    activeTank.x = activeTank.team.homebase[0] + 1;
-    activeTank.y = activeTank.team.homebase[1] + 1;
+    qLearning.calculationTank.x = qLearning.calculationTank.team.homebase[0] + 1;
+    qLearning.calculationTank.y = qLearning.calculationTank.team.homebase[1] + 1;
 
     wtVisited = 0;
 
@@ -42,27 +42,6 @@ void resetBoard() {
             gameBoard[i][j].visitCount = 0;
         }
     }
-}
-
-int updateVisited() {
-    Node activeNode = gameBoard[activeTank.x][activeTank.y];
-
-    if(!activeNode.visited) {
-        activeNode.visited = true;
-    }
-    activeNode.visitCount++;
-
-    int v = 0;
-
-    for(int i = 0; i < gridSize; i++){
-        for(int j = 0; j < gridSize; j++){
-            if(gameBoard[i][j].visited){
-                v++;
-            }
-        }
-    }
-
-    return v;
 }
 
 boolean allNodesVisited() {

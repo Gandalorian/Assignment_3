@@ -35,7 +35,7 @@ class Node {
     int value = 1;
 
     // Weights for leaving the node
-    float[] weights = new float[4];
+    float[][] weights = new float[4][8];
 
     // Constructor
     Node(CellType type, int x, int y) {
@@ -90,9 +90,9 @@ class Node {
         textSize(8);
         fill(0);
         //text(x + "," + y, x * cellSize, y * cellSize + 8);
-        text(nf(weights[0], 3, 3), x * cellSize + 10, y * cellSize + 10); // Up
-        text(nf(weights[3], 3, 3), x * cellSize + 20, y * cellSize + 20); // Right
-        text(nf(weights[1], 3, 3), x * cellSize + 10, y * cellSize + 40); // Down
-        text(nf(weights[2], 3, 3), x * cellSize + 2, y * cellSize + 20); // Left
+        //text(nf(weights[0], 3, 3), x * cellSize + 10, y * cellSize + 10); // Up
+        //text(nf(weights[3], 3, 3), x * cellSize + 20, y * cellSize + 20); // Right
+        //text(nf(weights[1], 3, 3), x * cellSize + 10, y * cellSize + 40); // Down
+        //text(nf(weights[2], 3, 3), x * cellSize + 2, y * cellSize + 20); // Left
     }
 }
