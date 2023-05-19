@@ -5,7 +5,7 @@
  */
 
  class QLearning{
-    float[][] QTable;
+    float[][][] QTable;
 
     Tank tank;
     int tankPreviousx;
@@ -18,6 +18,8 @@
 
     int actionsTaken = 0;
     int nodesVisited = 0;
+    int previousTowerPermutation = 0;
+    int visitedTowersPermutation = 0;
     int winsAchieved = 0;
     
     final int ACTIONSPACE = 4;
@@ -29,10 +31,12 @@
     float learning_rate;
 
     QLearning(int _episodes, int _maxIter, float _learningRate, Tank _tank){
-        QTable = new float[gridSize * gridSize][4];
+        QTable = new float[gridSize * gridSize][8][ACTIONSPACE];
         for(int i = 0; i < gridSize * gridSize; i++){
-            for(int j = 0; j < 4; j++){
-                QTable[i][j] = 0.0;
+            for(int j = 0; j < 8; j++){
+                for(int k = 0; k < ACTIONSPACE; k++){
+                    QTable[i][j][k] = 0.0;
+                }    
             }
         }
 
@@ -56,18 +60,17 @@
             System.out.println("New Episode: " + currentEpisode + " Exploration: " + exploration_probability);
         }
 
-        int action = chooseAction(tank.x, tank.y);
+        int[] tankPos = new int[]{tank.x, tank.y};
 
-        int[] newState = applyAction(tank.x, tank.y, action);
+        int action = chooseAction(tankPos);
+        int[] newState = applyAction(action);
         actionsTaken++;
-        nodesVisited = updateVisited();
-        checkVisitedTowers();
-        float reward = determineReward(newState[0], newState[1]);
+        float reward = determineReward(newState);
 
-        updateQValue(tankPreviousx, tankPreviousy, action, reward, newState[0], newState[1]);
+        updateQValue(tankPos, action, reward, newState);
 
         if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE 
-        || wtVisited == 3
+        || visitedTowersPermutation == 7
         || actionsTaken > 1000) {
             println("Iteration over.");
             println("Actions taken: " + actionsTaken);
@@ -83,7 +86,7 @@
 
     // Chooses the next action to be performed based on the Q-table.
     // The action can be random or the action with the highest Q-value.
-    int chooseAction(int x, int y) {
+    int chooseAction(int[] tankPosition) {
         if (Math.random() < exploration_probability) {
             return int(random(ACTIONSPACE));
         } else {
@@ -91,8 +94,8 @@
             int bestAction = 0;
 
             for(int i = 0; i < ACTIONSPACE; i++) {
-                if(QTable[x * gridSize + y][i] > maxQ) {
-                    maxQ = QTable[x * gridSize + y][i];
+                if(QTable[tankPosition[0] * gridSize + tankPosition[1]][visitedTowersPermutation][i] > maxQ) {
+                    maxQ = QTable[tankPosition[0] * gridSize + tankPosition[1]][visitedTowersPermutation][i];
                     bestAction = i;
                 }
             }
@@ -101,7 +104,7 @@
     }
 
     // Applies the action to the tank and returns the new position.
-    int[] applyAction(int x, int y, int action) {
+    int[] applyAction(int action) {
         switch(action) {
             case 0: // Up
                 tankPreviousx = tank.x;
@@ -124,13 +127,25 @@
                 tank.moveRight();
                 break;
         }
+
+        Node activeNode = gameBoard[tank.x][tank.y];
+
+        if(!activeNode.visited){
+            nodesVisited++;
+            activeNode.visited = true;
+        }
+        activeNode.visitCount++;
+
+        visitedTowersPermutation = checkVisitedTowers();
+
         return new int[]{tank.x, tank.y};
     }
 
-    float determineReward(int x, int y) {
+    float determineReward(int[] pos) {
         float reward = 0;
+        Node nodeToReward = gameBoard[pos[0]][pos[1]];
 
-        switch(gameBoard[x][y].type) {
+        switch(gameBoard[pos[0]][pos[1]].type) {
             case EMPTY: // Regular node
                 reward = 1.0f;
                 break;
@@ -148,7 +163,7 @@
                 } else {
                     reward = 1.0f;
                 }*/
-                if(wtVisited == 3){
+                if(!nodeToReward.visited){
                     reward = 1000f;
                 }else{
                     reward = 5f;
@@ -161,9 +176,14 @@
         return reward;
     }
 
-    void updateQValue(int x, int y, int action, float reward, int newX, int newY) {
-        QTable[x * gridSize + y][action] = QTable[x * gridSize + y][action] + learning_rate * (reward + discounted_factor * maxArr(QTable[newX * gridSize + newY]) - QTable[x * gridSize + y][action]);
-        updateNodeValues();
+    void updateQValue(int[] prevPos, int action, float reward, int[] newPos) {
+        float newQvalue = 0f;
+        float oldQValue = QTable[prevPos[0] * gridSize + prevPos[1]][previousTowerPermutation][action];
+        newQvalue = learning_rate * (reward + discounted_factor * maxArr(QTable[newPos[0] * gridSize + newPos[1]][visitedTowersPermutation]) - oldQValue);
+        QTable[prevPos[0] * gridSize + prevPos[1]][previousTowerPermutation][action] = oldQValue + newQvalue;
+        
+        gameBoard[prevPos[0]][prevPos[1]].weights[action] = oldQValue + newQvalue;
+        previousTowerPermutation = visitedTowersPermutation;
     }
 
     float maxArr(float[] arr) {
@@ -174,17 +194,6 @@
             }
         }
         return max;
-    }
-
-    void updateNodeValues() {
-        for(int i = 0; i < QTable.length; i++) {
-            int x = i / gridSize;
-            int y = i % gridSize;
-
-            for(int j = 0; j < 4; j++) {
-                gameBoard[x][y].weights[j] = QTable[i][j];
-            }
-        }
     }
 
  }

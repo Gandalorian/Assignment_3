@@ -76,19 +76,25 @@ boolean allNodesVisited() {
     return true;
 }
 
-void checkVisitedTowers(){
-    int w = 0;
-    for(int i = 0; i < watchtowers.length; i+= 2){
-        if(!gameBoard[watchtowers[i]][watchtowers[i+1]].visited){
-            continue;
-        }
-        w++;
-        wtVisited = w;
+int checkVisitedTowers(){
+    int visitedPermutation = 0;
+    if(gameBoard[watchtowers[0]][watchtowers[1]].visited){
+        visitedPermutation += 1;
+        wtVisited++;
     }
-    if(w == 3){
+    if(gameBoard[watchtowers[2]][watchtowers[3]].visited){
+        visitedPermutation += 2;
+        wtVisited++;
+    }
+    if(gameBoard[watchtowers[4]][watchtowers[5]].visited){
+        visitedPermutation += 4;
+        wtVisited++;
+    }
+    if(visitedPermutation == 7){
         println("All towers visited!");
         qLearning.winsAchieved++;
     }
+    return visitedPermutation;
 }
 
 boolean allWatchtowersVisited(){
