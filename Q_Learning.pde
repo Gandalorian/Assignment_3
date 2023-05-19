@@ -5,7 +5,7 @@
  */
 
  class QLearning{
-    float[][] QTable;
+    float[][][] QTable;
 
     Tank tank;
     int tankPreviousx;
@@ -29,10 +29,12 @@
     float learning_rate;
 
     QLearning(int _episodes, int _maxIter, float _learningRate, Tank _tank){
-        QTable = new float[gridSize * gridSize][4];
+        QTable = new float[gridSize * gridSize][4][8];
         for(int i = 0; i < gridSize * gridSize; i++){
             for(int j = 0; j < 4; j++){
-                QTable[i][j] = 0.0;
+                for(int k = 0; k < 8; k++) {
+                    QTable[i][j][k] = 0.0;
+                }
             }
         }
 
@@ -67,7 +69,7 @@
         updateQValue(tankPreviousx, tankPreviousy, action, reward, newState[0], newState[1]);
 
         if(gameBoard[tank.x][tank.y].type == CellType.LANDMINE 
-        || wtVisited == 3
+        || wtVisited == 7
         || actionsTaken > 1000) {
             println("Iteration over.");
             println("Actions taken: " + actionsTaken);
@@ -91,8 +93,8 @@
             int bestAction = 0;
 
             for(int i = 0; i < ACTIONSPACE; i++) {
-                if(QTable[x * gridSize + y][i] > maxQ) {
-                    maxQ = QTable[x * gridSize + y][i];
+                if(QTable[x * gridSize + y][i][wtVisited] > maxQ) {
+                    maxQ = QTable[x * gridSize + y][i][wtVisited];
                     bestAction = i;
                 }
             }
@@ -132,45 +134,46 @@
 
         switch(gameBoard[x][y].type) {
             case EMPTY: // Regular node
-                reward = 1.0f;
+                if(gameBoard[x][y].visited) {
+                    reward = -1f;
+                } else {
+                    reward = 1f;
+                }
                 break;
             case SWAMP: // Swamp
-                reward = 0.5f;
-                //reward = -1f;
+                if(gameBoard[x][y].visited) {
+                    reward = -1f;
+                } else {
+                    reward = 0.5f;
+                }
                 break;
             case LANDMINE: // Landmine
                 reward = -10f;
                 break;
             case WATCHTOWER: // Watchtower
-                /*
-                if(gameBoard[x][y].visitCount == 1) {
-                    reward = 1000f * pow(10, wtVisited);
-                } else {
-                    reward = 1.0f;
-                }*/
                 if(wtVisited == 3){
                     reward = 1000f;
                 }else{
-                    reward = 5f;
+                    reward = 200f;
                 }
                 break;
         }
-
-        reward = reward * nodesVisited / actionsTaken;
 
         return reward;
     }
 
     void updateQValue(int x, int y, int action, float reward, int newX, int newY) {
-        QTable[x * gridSize + y][action] = QTable[x * gridSize + y][action] + learning_rate * (reward + discounted_factor * maxArr(QTable[newX * gridSize + newY]) - QTable[x * gridSize + y][action]);
+        QTable[x * gridSize + y][action][wtVisited] = QTable[x * gridSize + y][action][wtVisited] + learning_rate * (reward + discounted_factor * maxArr(QTable[newX * gridSize + newY]) - QTable[x * gridSize + y][action][wtVisited]);
         updateNodeValues();
     }
 
-    float maxArr(float[] arr) {
+    float maxArr(float[][] arr) {
         float max = -Float.MAX_VALUE;
         for(int i = 0; i < arr.length; i++) {
-            if(arr[i] > max) {
-                max = arr[i];
+            for(int j = 0; j < arr[i].length; j++) {
+                if(arr[i][j] > max) {
+                    max = arr[i][j];
+                }
             }
         }
         return max;
@@ -182,7 +185,7 @@
             int y = i % gridSize;
 
             for(int j = 0; j < 4; j++) {
-                gameBoard[x][y].weights[j] = QTable[i][j];
+                gameBoard[x][y].weights[j] = QTable[i][j][wtVisited];
             }
         }
     }
