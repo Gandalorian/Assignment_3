@@ -151,7 +151,7 @@
                 reward = -10f;
                 break;
             case WATCHTOWER: // Watchtower
-                if(wtVisited == 3){
+                if(wtVisited == 7){
                     reward = 1000f;
                 }else{
                     reward = 200f;
