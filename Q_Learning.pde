@@ -73,36 +73,9 @@
 
         simulatedEpisodes = new ArrayList[episodes][max_iterations];
     }
-    /*
-    void draw() {
-        while(currentEpisode < episodes){
-            println("New Episode: " + currentEpisode);
-            exploration_probability = max(min_exploration, 1 - exploration_decay * currentEpisode);
 
-            currentIteration = 1;
-            
-            ArrayList<Integer>[] iterations = new ArrayList[max_iterations];
-            ArrayList<Integer> iterationActions = new ArrayList<>();
-
-            int maxActions = 0;
-            
-            while(currentIteration < max_iterations){
-                println("New Iteration: " + currentIteration + ". --- Exploration probability: " + exploration_probability);
-
-                int[] tankPos = new int[]{tank.x, tank.y};
-
-                while(simulateIteration(iterations, iterationActions, tankPos, maxActions)){
-                    tankPos = new int[]{tank.x, tank.y};
-                }
-            }
-
-            println("Max actions taken this episode: " + maxActions);
-
-            simulateEpisode(iterations, maxActions);
-            currentEpisode++;
-        }
-    }*/
-
+    // Method that calculates a single iteration in the current episode
+    // Updates the QTable values and checks for end variables
     boolean simulateIteration(int[] tankPos){
         //println("Simulate iteration " + currentIteration);
         int action = chooseAction(tankPos);
@@ -122,6 +95,11 @@
         return true;
     }
 
+    // Method that checks if the current iteration should end
+    // Either because it wins by visiting 3 watchtowers
+    // or because it wins by visiting all noes
+    // or because it dies by going over a landmine
+    // or because it failed by taking too many actions
     boolean endIterationCheck(int[] tankPos){
         //println("Checking for end");
         if(gameBoard[tankPos[0]][tankPos[1]].type == CellType.LANDMINE){
@@ -141,6 +119,8 @@
         return false;
     }
 
+    // Method that resets the iteration and all variables
+    // Does not reset the QTable values
     int resetIteration(){
         int maxActions = actionsTaken;
         println("Iteration over.");
@@ -218,6 +198,8 @@
         return new int[]{tank.x, tank.y};
     }
 
+    // Determines the reward the tank should get by visiting a node at pos[]
+    // Returns said reward
     float determineReward(int[] pos) {
         //println("Determining reward");
         float reward = 0;
@@ -250,6 +232,8 @@
         return reward;
     }
 
+    // Updats the QTable value at prevPos[] based on the max
+    // possible reward after newPos[] and the action taken
     void updateQValue(int[] prevPos, int action, float reward, int[] newPos) {
         //println("Update Q Value");
         float newQvalue = 0f;
@@ -262,6 +246,8 @@
         previousTowerPermutation = visitedTowersPermutation;
     }
 
+    // Returns the max value of an array
+    // Used to get max possible reward value in the QTable
     float maxArr(float[] arr) {
         float max = -Float.MAX_VALUE;
         for(int i = 0; i < arr.length; i++) {
@@ -272,6 +258,9 @@
         return max;
     }
 
+    // Calculates all the iterations for the next episode
+    // and saves the moves for each iteration in an array
+    // so that it can be displayed if needed
     void calculateNextEpisode(){
         println("New Episode: " + currentEpisode);
         exploration_probability = max(min_exploration, 1 - exploration_decay * (currentEpisode - 1));
@@ -296,6 +285,11 @@
         currentEpisode++;
     }
 
+    // Simulates the episodes one by one on the screen
+    // Decoupled from the calculation of episodes
+    // Basically just takes the actions saved in the simulatedEpisodes
+    // array and displays them one by one for each tank so that each
+    // tank take their first, second, third, etc, move at the same time
     void simulateCurrentEpisode(){
         
         if(currentlySimulatedAction > maxActionsPerEpisode[currentlySimulatedEpisode]){
@@ -335,6 +329,8 @@
         timeBetweenMoves = timer.setNewTimer(1);
     }
 
+    // Resets the position of the tanks for each episode 
+    // at the start of a new episode simulation
     void resetSimulation(){
         for(int i = 0; i < max_iterations; i++){
             simulationTanks[i].x = simulationTanks[i].team.homebase[0] + 1;
