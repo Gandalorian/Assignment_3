@@ -5,35 +5,65 @@
  */
 
  class QLearning{
+    // Array that stores the values for each node
+    // The 3 dimensions are 
+    // [nodes(256 in total)]
+    // [permutations of visited watchtowers (8 in total)]
+    // [actionspace (4 in total)]
     float[][][] QTable;
 
+    // Array that stores the tanks used in the simulation
+    // of an entire episode
     Tank[] simulationTanks;
-    Tank calculationTank;
-    int tankPreviousx;
-    int tankPreviousy;
 
+    // Tank used in the calculations, only one is needed
+    // as the iterations are calculated one by one
+    Tank calculationTank;
+
+    // Variables holding the current and max of both
+    // episodes and iterations
     int currentEpisode = 1;
     int episodes;
     int currentIteration = 1;
     int max_iterations;
 
+    // Array of Array of ArrayList of Integers
+    // Basically every move that the tank makes
+    // in an iteration gets stored as an integer,
+    // 0 is up, 1 is down, 2 is left, and 3 is right,
+    // in an ArrayList that keeps track of the order
+    // of the moves made and then every iteration 
+    // gets stored in an array, which then represents
+    // the entire episode, and this array gets stored
+    // in another array that represents all the episodes
     ArrayList<Integer>[][] simulatedEpisodes;
     ArrayList<Integer>[] iterations;
     ArrayList<Integer> iterationActions;
+
+    // Values used to display nice data on the screen
     int[] maxActionsPerEpisode;
     int[] longestIterationPerEpisode;
     int[] winsPerEpisode;
+    int winsAchieved = 0;
+
+    // Values used to keep track of which episode is
+    // currently being simulated
     int currentlySimulatedEpisode = 0;
     int currentlySimulatedAction = 0; 
 
+    // Values used to determine reward
     int actionsTaken = 0;
     int nodesVisited = 0;
+
+    // Values used to determine which permutation of
+    // visited towers the tank is in and entering
     int previousTowerPermutation = 0;
     int visitedTowersPermutation = 0;
-    int winsAchieved = 0;
-    
+
+    // Max amount of actions the tank can take
     final int ACTIONSPACE = 4;
 
+    // QLearning variables
     float exploration_probability = 1;
     float exploration_decay = 0.005;
     float min_exploration = 0.01;
@@ -160,23 +190,15 @@
         //println("Applying action");
         switch(action) {
             case 0: // Up
-                tankPreviousx = tank.x;
-                tankPreviousy = tank.y;
                 tank.moveUp();
                 break;
             case 1: // Down
-                tankPreviousx = tank.x;
-                tankPreviousy = tank.y;
                 tank.moveDown();
                 break;
             case 2: // Left
-                tankPreviousx = tank.x;
-                tankPreviousy = tank.y;
                 tank.moveLeft();
                 break;
             case 3: // Right
-                tankPreviousx = tank.x;
-                tankPreviousy = tank.y;
                 tank.moveRight();
                 break;
         }
