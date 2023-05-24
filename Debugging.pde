@@ -1,5 +1,17 @@
+/* 
+ * Authors:
+ * - Erik Gustafsson
+ * - August Hafvenström
+ */
+
+ /*
+  * This file contains all code for showing debugging information.
+  */
+
+// The node that is being clicked to show debugging information for.
 Node currentlySelectedNode;
 
+// Draws all debugging information.
 void drawDebugging(){
     textSize(20);
     text("Currently showing episode: " + (qLearning.currentlySimulatedEpisode + 1), gridSize * cellSize + 20, 50);
@@ -9,13 +21,16 @@ void drawDebugging(){
     text(qLearning.winsAchieved, gridSize * cellSize + 20, 150);
     text("Watchtowers visited: " + wtVisited, gridSize * cellSize + 20, height - 100);
     text("Actions taken: " + qLearning.currentlySimulatedAction, gridSize * cellSize + 20, height - 120);
-    //text("Nodes visited: " + qLearning.nodesVisited, gridSize * cellSize + 20, height - 80);
     if(currentlySelectedNode != null) {
         text("Current Node: " + currentlySelectedNode.x + ", " + currentlySelectedNode.y, gridSize * cellSize + 20, 200);
         drawDebugNode();
     }
 }
 
+// Draws the debugging information for the currently selected node.
+// Shown on the right side of the screen.
+// Since the state space accounts for all permutations of visited watchtowers,
+// 8 nodes are shown, one for each possible state.
 void drawDebugNode() {
     Node node = currentlySelectedNode;
     strokeWeight(1);
