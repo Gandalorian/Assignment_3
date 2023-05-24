@@ -13,7 +13,7 @@ Node currentlySelectedNode;
 
 // Draws all debugging information.
 void drawDebugging(){
-    textSize(20);
+    textSize(18);
     text("Currently showing episode: " + (qLearning.currentlySimulatedEpisode + 1), gridSize * cellSize + 20, 50);
     text("Exploration rate this episode: " + (max(qLearning.min_exploration, 1 - qLearning.exploration_decay * (qLearning.currentlySimulatedEpisode + 1)) * 100) + "%", gridSize * cellSize + 20, 75);  
     text("Wins achieved this episode: " + (qLearning.winsPerEpisode[qLearning.currentlySimulatedEpisode]), gridSize * cellSize + 20, 100);
