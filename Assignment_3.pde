@@ -105,11 +105,20 @@ void draw() {
         tree.draw();
     }
 
-    if(qLearning.currentEpisode < qLearning.episodes){
+    if(qLearning.currentEpisode <= qLearning.episodes){
         qLearning.calculateNextEpisode();
     }else{
         if(!done){
             println("1000 episodes calculated. Time taken: " + nf(float(timer.getElapsedTime()) / 1000, 3, 3) + " seconds");
+            int id = 0;
+            int mostwins = 0;
+            for(int i = 0; i < qLearning.winsPerEpisode.length; i++){
+                if(qLearning.winsPerEpisode[i] > mostwins){
+                    mostwins = qLearning.winsPerEpisode[id];
+                    id = i;
+                }
+            }
+            println(qLearning.winsAchieved + " wins achieved. Most wins on episode " + id + " with " + mostwins + " wins");
             done = true;
         }
     }

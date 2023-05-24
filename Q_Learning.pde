@@ -22,6 +22,7 @@
     ArrayList<Integer> iterationActions;
     int[] maxActionsPerEpisode;
     int[] longestIterationPerEpisode;
+    int[] winsPerEpisode;
     int currentlySimulatedEpisode = 0;
     int currentlySimulatedAction = 0; 
 
@@ -34,7 +35,7 @@
     final int ACTIONSPACE = 4;
 
     float exploration_probability = 1;
-    float exploration_decay = 0.025;
+    float exploration_decay = 0.005;
     float min_exploration = 0.01;
     float discounted_factor = 0.99;
     float learning_rate;
@@ -57,6 +58,7 @@
         calculationTank = _tank;
         maxActionsPerEpisode = new int[episodes];
         longestIterationPerEpisode = new int[episodes];
+        winsPerEpisode = new int[episodes];
         iterations = new ArrayList[max_iterations];
         iterationActions = new ArrayList<>();
 
@@ -66,6 +68,7 @@
 
         for(int i = 0; i < episodes; i++){
             maxActionsPerEpisode[i] = 0;
+            winsPerEpisode[i] = 0;
         }
 
         simulatedEpisodes = new ArrayList[episodes][max_iterations];
@@ -124,7 +127,12 @@
         if(gameBoard[tankPos[0]][tankPos[1]].type == CellType.LANDMINE){
             return true;
         }
+        if(allNodesVisited()){
+            winsPerEpisode[currentEpisode - 1]++;
+            return true;
+        }
         if(visitedTowersPermutation == 7){
+            winsPerEpisode[currentEpisode - 1]++;
             return true;
         }
         if(actionsTaken >= 1000){
@@ -214,29 +222,25 @@
         //println("Determining reward");
         float reward = 0;
         Node nodeToReward = gameBoard[pos[0]][pos[1]];
-
-        switch(gameBoard[pos[0]][pos[1]].type) {
+        
+        switch(nodeToReward.type) {
             case EMPTY: // Regular node
-                reward = 1.0f;
+                if(nodeToReward.visitCount < 2){
+                    reward = 1.0f;
+                }
                 break;
             case SWAMP: // Swamp
-                reward = 0.5f;
+                if(nodeToReward.visitCount < 2){
+                    reward = 0.5f;
+                }
                 //reward = -1f;
                 break;
             case LANDMINE: // Landmine
-                reward = -10f;
+                reward = -100f;
                 break;
             case WATCHTOWER: // Watchtower
-                /*
-                if(gameBoard[x][y].visitCount == 1) {
-                    reward = 1000f * pow(10, wtVisited);
-                } else {
-                    reward = 1.0f;
-                }*/
-                if(!nodeToReward.visited){
+                if(nodeToReward.visitCount < 2){
                     reward = 1000f;
-                }else{
-                    reward = 5f;
                 }
                 break;
         }
@@ -250,10 +254,11 @@
         //println("Update Q Value");
         float newQvalue = 0f;
         float oldQValue = QTable[prevPos[0] * gridSize + prevPos[1]][previousTowerPermutation][action];
-        newQvalue = learning_rate * (reward + discounted_factor * maxArr(QTable[newPos[0] * gridSize + newPos[1]][visitedTowersPermutation]) - oldQValue);
-        QTable[prevPos[0] * gridSize + prevPos[1]][previousTowerPermutation][action] = oldQValue + newQvalue;
+        float bestEstimate = maxArr(QTable[newPos[0] * gridSize + newPos[1]][visitedTowersPermutation]);
+        newQvalue = (1 - learning_rate) * oldQValue + learning_rate * (reward + discounted_factor * bestEstimate);
+        QTable[prevPos[0] * gridSize + prevPos[1]][previousTowerPermutation][action] = newQvalue;
         
-        gameBoard[prevPos[0]][prevPos[1]].weights[action][previousTowerPermutation] = oldQValue + newQvalue;
+        gameBoard[prevPos[0]][prevPos[1]].weights[action][previousTowerPermutation] = newQvalue;
         previousTowerPermutation = visitedTowersPermutation;
     }
 
@@ -294,10 +299,10 @@
     void simulateCurrentEpisode(){
         
         if(currentlySimulatedAction > maxActionsPerEpisode[currentlySimulatedEpisode]){
-            println("Simulating episode " + (currentlySimulatedEpisode + 1));
-            currentlySimulatedEpisode++;
+            currentlySimulatedEpisode += 3;
             currentlySimulatedAction = 0;
             resetSimulation();
+            println("Simulating episode " + (currentlySimulatedEpisode + 1));
         }
 
         for(Tank t : simulationTanks){
@@ -327,7 +332,7 @@
             }
         }
         currentlySimulatedAction++;
-        timeBetweenMoves = timer.setNewTimer(10);
+        timeBetweenMoves = timer.setNewTimer(1);
     }
 
     void resetSimulation(){
