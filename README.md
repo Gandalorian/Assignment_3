@@ -11,7 +11,7 @@
 
 ### Instructions for Processing IDE
 - Un-Zip the file at a convenient location.
-- In Processing, open the "Assignment_1_Grid.pde"-file.
+- In Processing, open the "Assignment_3.pde"-file.
 - Press the "play"-button.
 
 ### Instructions for VSCODE
