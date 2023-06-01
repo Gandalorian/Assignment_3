@@ -19,7 +19,7 @@ void drawDebugging(){
     text("Wins achieved this episode: " + (qLearning.winsPerEpisode[qLearning.currentlySimulatedEpisode]), gridSize * cellSize + 20, 100);
     text("Wins achieved over " + qLearning.currentEpisode + " episodes: ", gridSize * cellSize + 20, 125);
     text(qLearning.winsAchieved, gridSize * cellSize + 20, 150);
-    text("Watchtowers visited: " + wtVisited, gridSize * cellSize + 20, height - 100);
+    //text("Watchtowers visited: " + wtVisited, gridSize * cellSize + 20, height - 100);
     text("Actions taken: " + qLearning.currentlySimulatedAction, gridSize * cellSize + 20, height - 120);
     if(currentlySelectedNode != null) {
         text("Current Node: " + currentlySelectedNode.x + ", " + currentlySelectedNode.y, gridSize * cellSize + 20, 200);
